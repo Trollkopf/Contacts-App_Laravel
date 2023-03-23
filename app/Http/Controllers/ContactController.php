@@ -35,16 +35,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-       $data = $request->validate([
-        'name'=> 'required',
-        'email'=> 'required|email',
-        'phone_number'=> 'required|digits:9',
-        'age'=> 'required|numeric|min:1|max:255',
-       ]);
+        $data = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required|digits:9',
+            'age' => 'required|numeric|min:1|max:255',
+        ]);
 
-       Contact::create($data);
+        Contact::create($data);
 
-       return redirect()->route('home');
+        return redirect()->route('home');
     }
 
     /**
@@ -79,15 +79,15 @@ class ContactController extends Controller
     public function update(Request $request, Contact $contact)
     {
         $data = $request->validate([
-            'name'=> 'required',
-            'email'=> 'required|email',
-            'phone_number'=> 'required|digits:9',
-            'age'=> 'required|numeric|min:1|max:255',
-           ]);
-    
-           $contact->update($data);
-    
-           return redirect()->route('home');
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required|digits:9',
+            'age' => 'required|numeric|min:1|max:255',
+        ]);
+
+        $contact->update($data);
+
+        return redirect()->route('home');
     }
 
     /**
@@ -98,6 +98,7 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        return redirect()->route('home');
     }
 }
