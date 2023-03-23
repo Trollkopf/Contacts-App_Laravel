@@ -14,6 +14,5 @@ class Contact extends Model
         "phone_number",
         "age",
         "email"
-
     ];
 }
