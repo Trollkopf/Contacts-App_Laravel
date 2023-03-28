@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContactRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
@@ -34,16 +35,15 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required|digits:9',
-            'age' => 'required|numeric|min:1|max:255',
-        ]);
+    
+        $contact = auth()->user()->contacts()->create($request->validated());
 
-        auth()->user()->contacts()->create($data);
+        session()->flash('alert', [
+            'message' => "Contact $contact->name successfully saved",
+            'type' => 'success',
+        ]);
 
         return redirect()->route('home');
     }
@@ -82,18 +82,14 @@ class ContactController extends Controller
      * @param  \App\Models\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Contact $contact)
+    public function update(StoreContactRequest $request, Contact $contact)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required|digits:9',
-            'age' => 'required|numeric|min:1|max:255',
+        $contact->update($request->validated());
+
+        return redirect('home')->with('alert', [
+            'message' => "Contact $contact->name successfully edited",
+            'type' => 'info',
         ]);
-
-        $contact->update($data);
-
-        return redirect()->route('home');
     }
 
     /**
@@ -108,6 +104,12 @@ class ContactController extends Controller
         $this->authorize('delete', $contact);
 
         $contact->delete();
+
+        session()->flash('alert', [
+            'message' => "Contact $contact->name successfully deleted",
+            'type' => 'danger',
+        ]);
+
         return redirect()->route('home');
     }
 }
