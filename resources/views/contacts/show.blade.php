@@ -10,6 +10,9 @@
           </div>
 
           <div class="card-body">
+            <div class="d-flex justify-content-center mb-4">
+              <img src="{{ Storage::url($contact->profile_picture) }}" style="width:10rem">
+            </div>
             <table class="table table-hover">
               <tr>
                 <td>Name:</td>
@@ -39,6 +42,14 @@
               </tr>
             </table>
 
+            <div class="d-flex justify-content-end">
+              <a href="{{ route('contacts.edit', $contact->id) }}" class="btn btn-secondary mb-2  me-2"><x-icon icon="pencil"/></a>
+              <form action="{{ route('contacts.destroy', $contact->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger mb-2"><x-icon icon="trash"/></button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
