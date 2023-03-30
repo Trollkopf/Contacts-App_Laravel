@@ -40,12 +40,10 @@ class ContactController extends Controller
     
         $contact = auth()->user()->contacts()->create($request->validated());
 
-        session()->flash('alert', [
+        return redirect('home')->with('alert', [
             'message' => "Contact $contact->name successfully saved",
             'type' => 'success',
         ]);
-
-        return redirect()->route('home');
     }
 
     /**
