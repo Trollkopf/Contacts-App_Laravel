@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,40 +41,15 @@ Route::get('/', fn () => auth()->check() ? redirect('/home') : view('welcome'));
 
 Auth::routes();
 
-Route::get('/billing-portal', function (Request $request) {
-    if (auth()->check()) {
-        return $request->user()->redirectToBillingPortal();
-    } else {
-        return redirect('login')->with('alert', [
-            'message' => "Please log in to use this function",
-            'type' => 'info',
-        ]);
-    }
+Route::get('/billing-portal', [StripeController::class, 'billingPortal'])->name('billing-portal');
+Route::get('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+Route::get('/free-trial-end', [StripeController::class, 'freeTrialEnd'])->name('free-trial-end');
+
+Route::middleware(['auth', 'subscription'])->group(function(){
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('contacts', ContactController::class);
+
 });
-
-// Route::get('/checkout', function (Request $request) {
-//     return $request->user()
-//         ->newSubscription('default', config('stripe.price_id'))
-//         ->checkout();
-// });
-
-Route::get('/checkout', function (Request $request) {
-    if (auth()->check()) {
-        return $request->user()
-            ->newSubscription('default', 'price_1MsibfAH31WOh2JxrB7tLRT8')
-            ->checkout();
-    } else {
-        return redirect('login')->with('alert', [
-            'message' => "Please log in to use this function",
-            'type' => 'info',
-        ]);
-    }
-});
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-//CONTACTS CRUD
-Route::resource('contacts', ContactController::class);
 
 // CONTACTS CRUD MANUAL
 // Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
