@@ -20,7 +20,7 @@ use App\Http\Controllers\ContactController;
 |
 */
 
-Route::get('/', fn ()=> auth()->check() ? redirect('/home') : view('welcome'));
+Route::get('/', fn () => auth()->check() ? redirect('/home') : view('welcome'));
 
 
 // ? EJEMPLO DE UNA RUTA POST MANUAL (NO RECOMENDADO, USAR CONTROLADOR)
@@ -39,6 +39,36 @@ Route::get('/', fn ()=> auth()->check() ? redirect('/home') : view('welcome'));
 // });
 
 Auth::routes();
+
+Route::get('/billing-portal', function (Request $request) {
+    if (auth()->check()) {
+        return $request->user()->redirectToBillingPortal();
+    } else {
+        return redirect('login')->with('alert', [
+            'message' => "Please log in to use this function",
+            'type' => 'info',
+        ]);
+    }
+});
+
+// Route::get('/checkout', function (Request $request) {
+//     return $request->user()
+//         ->newSubscription('default', config('stripe.price_id'))
+//         ->checkout();
+// });
+
+Route::get('/checkout', function (Request $request) {
+    if (auth()->check()) {
+        return $request->user()
+            ->newSubscription('default', 'price_1MsibfAH31WOh2JxrB7tLRT8')
+            ->checkout();
+    } else {
+        return redirect('login')->with('alert', [
+            'message' => "Please log in to use this function",
+            'type' => 'info',
+        ]);
+    }
+});
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 

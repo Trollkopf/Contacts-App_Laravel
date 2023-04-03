@@ -19,7 +19,7 @@ class ContactController extends Controller
                     ->user()
                     ->contacts()
                     ->orderBy('name', 'asc')
-                    ->paginate(6);
+                    ->paginate(5);
 
         return view('contacts.index', compact('contacts'));
     }

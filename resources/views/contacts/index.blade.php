@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         @forelse ($contacts as $contact)
-            <div class="d-flex justify-content-between bg-dark mb-3 rounded px-4 py-2">
+            <div class="d-flex justify-content-between bg-primary mb-3 rounded px-4 py-2">
                 <div>
                     <a href="{{ route('contacts.show', $contact->id) }}">
                         <img src="{{ Storage::url($contact->profile_picture) }}" class="profile-picture">
