@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactShareController;
 use App\Http\Controllers\StripeController;
 
 /*
@@ -45,10 +46,10 @@ Route::get('/billing-portal', [StripeController::class, 'billingPortal'])->name(
 Route::get('/checkout', [StripeController::class, 'checkout'])->name('checkout');
 Route::get('/free-trial-end', [StripeController::class, 'freeTrialEnd'])->name('free-trial-end');
 
-Route::middleware(['auth', 'subscription'])->group(function(){
+Route::middleware(['auth', 'subscription'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('contacts', ContactController::class);
-
+    Route::resource('contact-shares', ContactShareController::class)->except(['show', 'edit', 'update']);
 });
 
 // CONTACTS CRUD MANUAL

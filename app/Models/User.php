@@ -46,7 +46,13 @@ class User extends Authenticatable
         'trial_ends_at' => 'datetime',
     ];
 
-    public function contacts(){
+    public function contacts()
+    {
         return $this->hasMany(Contact::class);
+    }
+
+    public function sharedContacts()
+    {
+        return $this->belongsToMany(Contact::class, 'contact_shares');
     }
 }
