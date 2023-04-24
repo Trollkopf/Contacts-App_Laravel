@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $testUser = User::factory()
+            ->hasContacts(30)
+            ->createOne([
+                'name' => 'Test User',
+                'email' => 'test@test.com',
+            ]);
+        $users = User::factory(4)->hasContacts(5)->create()->each(
+            fn ($user) => $user
+                ->contacts
+                ->first()
+                ->sharedWithUsers()
+                ->attach($testUser->id)
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $testUser->contacts->first()->sharedWithUsers()->attach($users->pluck('id'));
     }
 }
