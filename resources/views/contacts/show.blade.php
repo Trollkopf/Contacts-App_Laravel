@@ -41,15 +41,6 @@
                 <td>{{ $contact->updated_at }}</td>
               </tr>
             </table>
-
-            <div class="d-flex justify-content-end">
-              <a href="{{ route('contacts.edit', $contact->id) }}" class="btn btn-secondary mb-2  me-2"><x-icon icon="pencil"/></a>
-              <form action="{{ route('contacts.destroy', $contact->id) }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger mb-2"><x-icon icon="trash"/></button>
-              </form>
-            </div>
           </div>
         </div>
       </div>
